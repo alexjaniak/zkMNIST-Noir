@@ -13,6 +13,7 @@ import axios from 'axios';
 
 import { forwardPass } from '../utils/ml/model';
 import * as tf from "@tensorflow/tfjs";
+import DigitImage from '../components/DigitImage';
 
 async function getCircuit(name: string) {
   await newCompiler();
@@ -32,14 +33,17 @@ function Component(sampleData) {
   const [noir, setNoir] = useState<Noir | null>(null);
   const [model, setModel] = useState(null);
   const [backend, setBackend] = useState<BarretenbergBackend | null>(null);
-
-
+  const MNISTLabels: string[] = Array.from({ length: 10 }, (_, i) => i.toString());
+  const [selectedDigit, setSelectedDigit] = React.useState<string | null>(null);
+  
   // Calculates proof
   const calculateProof = async () => {
     const calc = new Promise(async (resolve, reject) => {
       if (noir && model) {
-        const input = tf.tensor(sampleData['1']).reshape([1, 28, 28]).div(tf.scalar(255.0));
-        console.log("Expected Output:", 1);
+        // @ts-ignore
+        const input = tf.tensor(sampleData[selectedDigit]).reshape([1, 28, 28]).div(tf.scalar(255.0));
+        // @ts-ignore
+        console.log("Expected Output:", +selectedDigit);
         // @ts-ignore
         const [scaledInput, scaledWeights, scaledBias, output] = forwardPass(model, input);
 
@@ -156,9 +160,30 @@ function Component(sampleData) {
     loadModel();
   }, []);
 
+
   return (
     <div className="container">
-      <h1>ZKMNIST - Noir</h1>
+      <h1 style={{textAlign: 'center'}} >ZKMNIST - Noir</h1>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridGap: '10px',
+        justifyContent: 'center',
+        maxWidth: 'fit-content',
+        margin: 'auto',
+      }}>
+        {MNISTLabels.map(label => (
+          <div key={+label} style={{ gridColumn: +label === 9 ? '2' : 'auto' }}> {/* Center the 10th element */}
+            <DigitImage 
+              label={+label} 
+              data={sampleData[label]}
+              scale={4}
+              onClick={() => setSelectedDigit(label)}
+              isSelected={label == selectedDigit}
+            />
+          </div>
+        ))}
+      </div>
       <button onClick={calculateProof}>Calculate proof</button>
     </div>
   );
