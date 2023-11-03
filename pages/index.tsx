@@ -1,5 +1,5 @@
 import React from 'react';
-import Component from '../components/component';
+import MainComponent from '../components/Main';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -15,5 +15,5 @@ export async function getServerSideProps() {
   };
 }
 export default function Page({ sampleData }) {
-  return <Component {...sampleData}/>;
+  return <MainComponent {...sampleData}/>;
 }

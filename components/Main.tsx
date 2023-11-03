@@ -13,7 +13,8 @@ import axios from 'axios';
 
 import { forwardPass } from '../utils/ml/model';
 import * as tf from "@tensorflow/tfjs";
-import DigitImage from '../components/DigitImage';
+import DigitImage from './DigitImage';
+import ProofDisplay from './ProofDisplay';
 
 async function getCircuit(name: string) {
   await newCompiler();
@@ -28,20 +29,22 @@ async function getCircuit(name: string) {
   return compiled;
 }
 
-function Component(sampleData) {
+function MainComponent(sampleData) {
   const [proof, setProof] = useState<ProofData>();
   const [noir, setNoir] = useState<Noir | null>(null);
   const [model, setModel] = useState(null);
   const [backend, setBackend] = useState<BarretenbergBackend | null>(null);
-  const MNISTLabels: string[] = Array.from({ length: 10 }, (_, i) => i.toString());
-  const [selectedDigit, setSelectedDigit] = React.useState<string | null>(null);
+  const [selectedDigit, setSelectedDigit] = useState<string | undefined>(undefined);
+  const [prediction, setPrediction] = useState<number | undefined>(undefined);
+  const [provedDigit, setProvedDigit] = useState<number | undefined>(undefined)
   
   // Calculates proof
   const calculateProof = async () => {
     const calc = new Promise(async (resolve, reject) => {
-      if (noir && model) {
+      if (noir && model && selectedDigit) {
         // @ts-ignore
         const input = tf.tensor(sampleData[selectedDigit]).reshape([1, 28, 28]).div(tf.scalar(255.0));
+        setProvedDigit(+selectedDigit);
         // @ts-ignore
         console.log("Expected Output:", +selectedDigit);
         // @ts-ignore
@@ -49,12 +52,15 @@ function Component(sampleData) {
 
         output.data().then(arr => console.log("Model Inference: ", arr));
 
+        const outputClass = (await output.array())[0];
+        setPrediction(outputClass);
+
         const flattenedScaledWeights = scaledWeights.flatten();
         const abi = {
             input: (await scaledInput.array())[0],
             weights: await flattenedScaledWeights.array(),
             biases: await scaledBias.array(),
-            class: (await output.array())[0],
+            class: outputClass,
         };
 
         const { proof, publicInputs } = await noir!.generateFinalProof(abi);
@@ -160,20 +166,21 @@ function Component(sampleData) {
     loadModel();
   }, []);
 
+  const MNISTLabels: string[] = Array.from({ length: 10 }, (_, i) => i.toString());
 
   return (
     <div className="container">
       <h1 style={{textAlign: 'center'}} >ZKMNIST - Noir</h1>
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: 'repeat(5, 1fr)',
         gridGap: '10px',
         justifyContent: 'center',
         maxWidth: 'fit-content',
         margin: 'auto',
       }}>
         {MNISTLabels.map(label => (
-          <div key={+label} style={{ gridColumn: +label === 9 ? '2' : 'auto' }}> {/* Center the 10th element */}
+          <div key={+label}> 
             <DigitImage 
               label={+label} 
               data={sampleData[label]}
@@ -184,9 +191,16 @@ function Component(sampleData) {
           </div>
         ))}
       </div>
-      <button onClick={calculateProof}>Calculate proof</button>
+      <div>
+        <button onClick={calculateProof}>Prove & Verify</button>
+      </div>
+      <ProofDisplay
+        label={provedDigit}
+        prediction={prediction} 
+        proof={proof ? proof?.proof : undefined}
+      />
     </div>
   );
 }
 
-export default Component;
+export default MainComponent;

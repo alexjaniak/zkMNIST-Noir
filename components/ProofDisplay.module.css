@@ -1,0 +1,10 @@
+.arrayDisplay {
+  font-family: 'Courier New', monospace;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px 0;
+  white-space: pre-wrap; /* Ensures that the hex string wraps */
+  word-wrap: break-word;
+}
