@@ -1,5 +1,5 @@
 // components/DigitImage.tsx
-import { FC, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import React from 'react';
 
 type DigitImageProps = {
