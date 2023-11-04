@@ -20,8 +20,14 @@ const ProofDisplay: React.FC<ProofDisplayProps> = ({label, proof, prediction}) =
     if (proof == undefined || prediction == undefined || label == undefined) return <div></div>;
     return (
         <div>
-            <h2>Expected Class:{label}</h2>
-            <h2>Model Classification:{prediction}</h2>
+            <div>
+                <h2>Expected Class:{label}</h2>
+                <h2>Model Classification:{prediction}</h2>
+            </div>
+            <div>
+                <h2>Verified Off-Chain:</h2>
+                <h2>Verified On-Chain:</h2>
+            </div>
             <h2>Proof</h2>
             <Uint8ArrayDisplay data={proof} />
         </div> 
