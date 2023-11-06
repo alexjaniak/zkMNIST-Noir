@@ -16,6 +16,7 @@ import * as tf from "@tensorflow/tfjs";
 import DigitImage from './DigitImage';
 import ProofDisplay from './ProofDisplay';
 
+//@ts-ignore
 import styles from './Main.module.css';
 
 // Get compiled circuit
@@ -182,10 +183,16 @@ function MainComponent(sampleData) {
   return (
     <div className={styles.container}>
       <h1 style={{textAlign: 'center'}} >ZKMNIST - Noir</h1>
-      <a href={'https://github.com/alexjaniak/zkMNIST-Noir'}>@GitHub</a>
+      <a style={{fontSize: '20px'}} href={'https://github.com/alexjaniak/zkMNIST-Noir'}>@GitHub</a>
       <hr></hr>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at risus mauris. Cras ullamcorper vestibulum nibh, sed efficitur diam accumsan eget. Sed sit amet ante id orci tincidunt hendrerit vel vel arcu. Nam dictum lectus nec felis auctor, at eleifend purus semper. Aliquam at vestibulum libero, consectetur hendrerit tellus. Maecenas nec nisl nibh. Vivamus tempor quam at lacus viverra, lobortis pretium tellus rhoncus. Curabitur in porta nisi. Nam ultrices dictum commodo. Morbi vel sollicitudin urna. Nam suscipit faucibus metus, eget ornare elit tempor nec. Proin a elit a enim iaculis mollis quis imperdiet dui. Sed viverra mauris et velit venenatis ornare. Vivamus erat nibh, venenatis eget auctor nec, cursus nec mauris. Nunc pulvinar magna sed odio vulputate lobortis. Integer sodales orci nec tempor semper. Suspendisse condimentum ultrices justo at lobortis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus vitae massa sit amet augue malesuada mattis. Duis interdum, elit sed pretium commodo, tellus nulla euismod nulla, sit amet feugiat turpis nisl non lacus. Cras ante erat, suscipit ut turpis eget, ornare vulputate urna. Sed eget commodo ante. Ut fermentum nisl et risus mattis placerat. Praesent malesuada mauris et eros blandit eleifend. Donec id convallis augue. Donec efficitur metus quis suscipit vulputate. Suspendisse gravida felis turpis, ut vestibulum risus fringilla eu. Vestibulum venenatis leo ac maximus hendrerit. Ut maximus tincidunt est, ac dapibus nulla accumsan in. Donec tempor justo porta ipsum blandit malesuada. Maecenas ultricies libero ut porttitor porta. Donec fermentum aliquam lacus non vestibulum. Sed.
+        Ethereum's smart contracts enable trustless execution in a decentralized environment. Yet, the limitations in computational power and the transparent aspect of blockchain transactions limit the ability to develop applications that require intensive computation or handle private data, like those used in machine learning. Zero-Knowledge (ZK) proofs aim to free these constraints by allowing the validation of transactions or computations without revealing the underlying data, thereby enabling privacy-preserving smart contracts. 
+      </p>
+      <p>
+        These proofs can thus be used to facilitate the on-chain execution of machine learning models in a way that keeps the data used for inference confidential. This web app is an example of such zero-knowledge machine learning with the proving system written using Aztec Network’s ZK domain specific language <a href='https://noir-lang.org/'>Noir</a>. The app uses a neural network trained on the <a href='https://paperswithcode.com/dataset/mnist'>MNIST dataset</a> (A collection of handwritten digits), that classifies the selected digit and then generates proof of the classification while keeping the inputs private. The proof can then be verified on or off-chain. 
+      </p>
+      <p>
+        Inspired by <a href={'https://0xparc.org/blog/zk-mnist'}>0xPARC</a>. Authored by <a href={'https://alexjaniak.com'}>Alexander Janiak</a>.
       </p>
       <h2>Select Digit</h2>
       <div className={styles.digitGrid}>

@@ -5,9 +5,12 @@
   border-radius: 4px;
   padding: 10px;
   margin: 10px auto;
+  margin-bottom: 100px;
   white-space: pre-wrap; /* Ensures that the hex string wraps */
   word-wrap: break-word;
   max-width: 75%; /* Maximum width of 80% */
+  max-height: 300px; /* Maximum height of your choice */
+  overflow: auto; /* Enables scrolling if content overflows */
 }
 
 .outputContainer {
@@ -21,6 +24,7 @@
 .outputHeader {
   font-size: 25px;
   font-weight: 500;
+  margin-top: 15px;
 }
 
 .proofHeader {

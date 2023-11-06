@@ -1,5 +1,7 @@
 import React from 'react';
+//@ts-ignore
 import styles from './ProofDisplay.module.css';
+
 
 type ProofDisplayProps = {
     label: number | undefined,
@@ -19,7 +21,7 @@ const Uint8ArrayDisplay = ({ data }) => {
   };
 
 function verifierFormatting(output: boolean | undefined) {
-    if (output == undefined) return (<span style={{ display: 'inline-block', width: '50px'}}>-</span>);
+    if (output == undefined) return (<span style={{ display: 'inline-block', width: '50px', textAlign: 'center'}}>—</span>);
 
     return (<span style={{ display: 'inline-block', width: '50px', textAlign: 'center', color: output ? 'green' : 'red' }}>
                 {output ? 'True' : 'False'}
