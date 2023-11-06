@@ -18,19 +18,30 @@ const Uint8ArrayDisplay = ({ data }) => {
     return <div className={styles.arrayDisplay}>{hexString.toUpperCase()}</div>;
   };
 
+function verifierFormatting(output: boolean | undefined) {
+    if (output == undefined) return (<span style={{ display: 'inline-block', width: '50px'}}>-</span>);
+
+    return (<span style={{ display: 'inline-block', width: '50px', textAlign: 'center', color: output ? 'green' : 'red' }}>
+                {output ? 'True' : 'False'}
+            </span>);
+}
+
 const ProofDisplay: React.FC<ProofDisplayProps> = ({label, proof, prediction, onChain, offChain}) => {
     if (proof == undefined || prediction == undefined || label == undefined) return <div></div>;
     return (
         <div>
-            <div>
-                <h2>Expected Class:{label}</h2>
-                <h2>Model Classification:{prediction}</h2>
+            <hr></hr>
+            <div className={styles.outputContainer}>
+                <h2 className={styles.outputHeader}>Expected Class: {label}</h2>
+                <h2 className={styles.outputHeader}>
+                    Verified On-Chain: {verifierFormatting(onChain)}
+                </h2>
             </div>
-            <div>
-                <h2>Verified Off-Chain: {offChain == undefined ? '-' : offChain.toString()}</h2>
-                <h2>Verified On-Chain: {onChain == undefined ? '-' : onChain.toString()}</h2>
+            <div className={styles.outputContainer}>
+                <h2 className={styles.outputHeader}>Model Classification: {prediction}</h2>
+                <h2 className={styles.outputHeader}>Verified Off-Chain: {verifierFormatting(offChain)}</h2>
             </div>
-            <h2>Proof</h2>
+            <h2 className={styles.proofHeader}>Proof</h2>
             <Uint8ArrayDisplay data={proof} />
         </div> 
     );

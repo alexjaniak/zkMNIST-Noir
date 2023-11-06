@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh; /* Use the full screen height */
+    max-width: 75%; /* Maximum width of 80% */
+    margin: 0 auto; /* Center the max-width element */
+  }
+
+.digitGrid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    justify-content: center;
+    max-width: fit-content;
+    margin: 10px auto 10px auto;
+}
+  

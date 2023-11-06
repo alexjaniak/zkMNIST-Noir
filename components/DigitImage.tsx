@@ -37,10 +37,10 @@ const DigitImage: React.FC<DigitImageProps> = ({ data, label, scale, onClick, is
       }
     }, [data, scale]);
 
-    const borderColor = isSelected ? 'blue' : 'transparent';
+    const borderColor = isSelected ? '#54b3d6' : 'transparent';
   
     return (
-      <div onClick={onClick} style={{ cursor: 'pointer', border: `4px solid ${borderColor}`}} >
+      <div onClick={onClick} style={{ cursor: 'pointer', border: `5px solid ${borderColor}`, height: 28*scale}} >
         <canvas ref={canvasRef} width={28 * scale} height={28 * scale} />
       </div>
     );

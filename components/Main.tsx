@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, useEffect } from 'react';
 
 import { toast } from 'react-toastify';
 import Ethers from '../utils/ethers';
@@ -15,6 +15,8 @@ import { forwardPass } from '../utils/ml/model';
 import * as tf from "@tensorflow/tfjs";
 import DigitImage from './DigitImage';
 import ProofDisplay from './ProofDisplay';
+
+import styles from './Main.module.css';
 
 // Get compiled circuit
 async function getCircuit(name: string) {
@@ -178,7 +180,7 @@ function MainComponent(sampleData) {
   const MNISTLabels: string[] = Array.from({ length: 10 }, (_, i) => i.toString());
 
   return (
-    <div className="container">
+    <div className={styles.container}>
       <h1 style={{textAlign: 'center'}} >ZKMNIST - Noir</h1>
       <a href={'https://github.com/alexjaniak/zkMNIST-Noir'}>@GitHub</a>
       <hr></hr>
@@ -186,14 +188,7 @@ function MainComponent(sampleData) {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla at risus mauris. Cras ullamcorper vestibulum nibh, sed efficitur diam accumsan eget. Sed sit amet ante id orci tincidunt hendrerit vel vel arcu. Nam dictum lectus nec felis auctor, at eleifend purus semper. Aliquam at vestibulum libero, consectetur hendrerit tellus. Maecenas nec nisl nibh. Vivamus tempor quam at lacus viverra, lobortis pretium tellus rhoncus. Curabitur in porta nisi. Nam ultrices dictum commodo. Morbi vel sollicitudin urna. Nam suscipit faucibus metus, eget ornare elit tempor nec. Proin a elit a enim iaculis mollis quis imperdiet dui. Sed viverra mauris et velit venenatis ornare. Vivamus erat nibh, venenatis eget auctor nec, cursus nec mauris. Nunc pulvinar magna sed odio vulputate lobortis. Integer sodales orci nec tempor semper. Suspendisse condimentum ultrices justo at lobortis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus vitae massa sit amet augue malesuada mattis. Duis interdum, elit sed pretium commodo, tellus nulla euismod nulla, sit amet feugiat turpis nisl non lacus. Cras ante erat, suscipit ut turpis eget, ornare vulputate urna. Sed eget commodo ante. Ut fermentum nisl et risus mattis placerat. Praesent malesuada mauris et eros blandit eleifend. Donec id convallis augue. Donec efficitur metus quis suscipit vulputate. Suspendisse gravida felis turpis, ut vestibulum risus fringilla eu. Vestibulum venenatis leo ac maximus hendrerit. Ut maximus tincidunt est, ac dapibus nulla accumsan in. Donec tempor justo porta ipsum blandit malesuada. Maecenas ultricies libero ut porttitor porta. Donec fermentum aliquam lacus non vestibulum. Sed.
       </p>
       <h2>Select Digit</h2>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(5, 1fr)',
-        gridGap: '10px',
-        justifyContent: 'center',
-        maxWidth: 'fit-content',
-        margin: 'auto',
-      }}>
+      <div className={styles.digitGrid}>
         {MNISTLabels.map(label => (
           <div key={+label}> 
             <DigitImage 
@@ -211,7 +206,6 @@ function MainComponent(sampleData) {
         <button onClick={offChainHandler}>Verify Off-Chain</button>
         <button onClick={onChainHandler}>Verify On-Chain</button>
       </div>
-      <hr></hr>
       <ProofDisplay
         label={provedDigit}
         prediction={prediction} 
