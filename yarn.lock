@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"@aztec/bb.js@0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@aztec/bb.js/-/bb.js-0.11.0.tgz#044f8604047fb57992e7281dd90f6be3b32b6eb5"
+  integrity sha512-9Qyany2FQR39KagI+fCs4glLzXsSJ1F45JlQHrPrSm2KF0BsVz3M8r6MMzNfxgdWWfqFkkUiA9BYOy2vV9Xi4Q==
+  dependencies:
+    comlink "^4.4.1"
+    commander "^10.0.1"
+    debug "^4.3.4"
+    tslib "^2.4.0"
+
 "@aztec/bb.js@0.8.10":
   version "0.8.10"
   resolved "https://registry.npmjs.org/@aztec/bb.js/-/bb.js-0.8.10.tgz"

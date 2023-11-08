@@ -15,9 +15,9 @@ import { forwardPass } from '../utils/ml/model';
 import * as tf from "@tensorflow/tfjs";
 import DigitImage from './DigitImage';
 import ProofDisplay from './ProofDisplay';
-
 //@ts-ignore
 import styles from './Main.module.css';
+
 
 // Get compiled circuit
 async function getCircuit(name: string) {
@@ -36,8 +36,10 @@ async function getCircuit(name: string) {
 function MainComponent(sampleData) {
   const [proof, setProof] = useState<ProofData>();
   const [noir, setNoir] = useState<Noir | null>(null);
+  const [noirPedersen, setnoirPedersen] = useState<Noir | null>(null);
   const [model, setModel] = useState(null);
   const [backend, setBackend] = useState<BarretenbergBackend | null>(null);
+  const [backendPedersen, setbackendPedersen] = useState<BarretenbergBackend | null>(null);
 
   const [selectedDigit, setSelectedDigit] = useState<string | undefined>(undefined);
   const [prediction, setPrediction] = useState<number | undefined>(undefined);
@@ -45,6 +47,7 @@ function MainComponent(sampleData) {
   const [offChainVerification, setOffChainVerification] = useState<boolean | undefined>();
   const [onChainVerification, setOnChainVerification] = useState<boolean | undefined>();
   
+
   // Classify and Prove Digit
   const calculateProof = async () => {
     const calc = new Promise(async (resolve, reject) => {
@@ -66,16 +69,18 @@ function MainComponent(sampleData) {
         setPrediction(outputClass);
 
         const flattenedScaledWeights = scaledWeights.flatten();
+        const inputArray = (await scaledInput.array())[0]
+        const result = await noirPedersen!.execute({ inputs: inputArray });
+
         const abi = {
-            input: (await scaledInput.array())[0],
+            input: inputArray,
             weights: await flattenedScaledWeights.array(),
             biases: await scaledBias.array(),
             class: outputClass,
+            input_hash: result.returnValue,
         };
 
         const { proof, publicInputs } = await noir!.generateFinalProof(abi);
-
-        //console.log('Proof created: ', proof);
         
         setProof({ proof, publicInputs });
         setOffChainVerification(undefined);
@@ -120,8 +125,9 @@ function MainComponent(sampleData) {
       if (!window.ethereum) return reject(new Error('No ethereum provider'));
       try {
         const ethers = new Ethers();
+        await ethers.init();
         const verification = await ethers.contract.verify(proof.proof, proof.publicInputs);
-
+        console.log(ethers.signer);
         console.log('Proof verified on-chain: ', verification);
         setOnChainVerification(verification);
         resolve(verification);
@@ -143,11 +149,19 @@ function MainComponent(sampleData) {
   }
 
   const initNoir = async () => {
-    const circuit = await getCircuit('main');
+    const circuit = await getCircuit('Main/src/main');
+    const circuitUtil = await getCircuit('Utils/src/main');
 
     const backend = new BarretenbergBackend(circuit as CompiledCircuit, { threads: 8 });
     setBackend(backend);
+    const backendPedersen = new BarretenbergBackend(circuitUtil as CompiledCircuit, { threads: 8 });
+    setbackendPedersen(backendPedersen);
+
     const noir = new Noir(circuit as CompiledCircuit, backend);
+    const noirPedersen = new Noir(circuitUtil, backendPedersen);
+
+    await noirPedersen.init()
+    setnoirPedersen(noirPedersen);
 
     await toast.promise(noir.init(), {
       pending: 'Initializing Noir...',

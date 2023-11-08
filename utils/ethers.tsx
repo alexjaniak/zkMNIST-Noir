@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import addresses from './addresses.json';
-import artifacts from '../artifacts/circuits/contract/noirstarter/plonk_vk.sol/UltraVerifier.json';
+import artifacts from '../artifacts/circuits/Main/contract/LastLayer/plonk_vk.sol/UltraVerifier.json';
+
 import { toast } from 'react-toastify';
 
 declare global {
@@ -18,19 +19,19 @@ class Ethers {
 
   // constructor instantiantes the underlying ethers provider and signer
   // and connects to the contract
-  constructor() {
+  async init() {
     this.provider = new ethers.providers.Web3Provider(window.ethereum);
     this.utils = ethers.utils;
     this.signer = this.provider.getSigner();
 
     this.contract = new ethers.Contract(addresses.verifier, artifacts.abi, this.signer);
-    this.connect();
+    await this.connect();
   }
 
   async connect() {
     if (typeof window.ethereum !== 'undefined') {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
-
+      
       const currentNetworkId = parseInt(await window.ethereum.request({ method: 'net_version' }));
       if (currentNetworkId !== addresses.chainId) {
         try {
