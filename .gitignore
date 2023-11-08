@@ -1,8 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-mnist_test.csv
-mnist_train.csv
-
 .env
 .tmp
 
@@ -58,4 +55,3 @@ artifacts
 .yarn/
 utils/ml/data/mnist_test.csv
 utils/ml/data/mnist_train.csv
-utils/ml/data/sample.json
