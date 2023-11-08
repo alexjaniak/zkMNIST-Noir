@@ -42,7 +42,7 @@ class Ethers {
         } catch (error) {
           console.error('Error switching network:', error);
           if (error.code === 4902) {
-            toast(`Please add the mumbai network to your MetaMask wallet`, {
+            toast(`Please add the sepolia network to your MetaMask wallet`, {
               type: 'error',
             });
           } else {

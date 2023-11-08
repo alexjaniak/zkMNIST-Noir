@@ -1,4 +1,3 @@
-// components/DigitImage.tsx
 import { useEffect, useRef } from 'react';
 import React from 'react';
 
@@ -14,7 +13,7 @@ const DigitImage: React.FC<DigitImageProps> = ({ data, label, scale, onClick, is
     const canvasRef = useRef<HTMLCanvasElement>(null);
   
     useEffect(() => {
-      if (canvasRef.current) {
+      if (canvasRef.current) { // Fill Canvas with MNIST pixels
         const ctx = canvasRef.current.getContext('2d');
         if (ctx) {
           let imgData = ctx.createImageData(28 * scale, 28 * scale);

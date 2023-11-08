@@ -20,7 +20,7 @@ const Uint8ArrayDisplay = ({ data }) => {
     return <div className={styles.arrayDisplay}>{hexString.toUpperCase()}</div>;
   };
 
-function verifierFormatting(output: boolean | undefined) {
+function handleVerification(output: boolean | undefined) {
     if (output == undefined) return (<span style={{ display: 'inline-block', width: '50px', textAlign: 'center'}}>—</span>);
 
     return (<span style={{ display: 'inline-block', width: '50px', textAlign: 'center', color: output ? 'green' : 'red' }}>
@@ -36,12 +36,12 @@ const ProofDisplay: React.FC<ProofDisplayProps> = ({label, proof, prediction, on
             <div className={styles.outputContainer}>
                 <h2 className={styles.outputHeader}>Expected Class: {label}</h2>
                 <h2 className={styles.outputHeader}>
-                    Verified On-Chain: {verifierFormatting(onChain)}
+                    Verified On-Chain: {handleVerification(onChain)}
                 </h2>
             </div>
             <div className={styles.outputContainer}>
                 <h2 className={styles.outputHeader}>Model Classification: {prediction}</h2>
-                <h2 className={styles.outputHeader}>Verified Off-Chain: {verifierFormatting(offChain)}</h2>
+                <h2 className={styles.outputHeader}>Verified Off-Chain: {handleVerification(offChain)}</h2>
             </div>
             <h2 className={styles.proofHeader}>Proof</h2>
             <Uint8ArrayDisplay data={proof} />

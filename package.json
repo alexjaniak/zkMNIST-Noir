@@ -1,7 +1,7 @@
 {
-  "name": "noir-starter",
+  "name": "zkmnist-noir",
   "version": "1.0.0",
-  "description": "A template repository to get started with writing zero knowledge programs with Noir.",
+  "description": "An implementation of a neural network trained on the MNIST data proved & verified using Noir",
   "scripts": {
     "dev": "hardhat compile && yarn deploy && next",
     "build": "hardhat compile && yarn deploy && next build",

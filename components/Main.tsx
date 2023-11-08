@@ -19,7 +19,7 @@ import ProofDisplay from './ProofDisplay';
 import styles from './Main.module.css';
 
 
-// Get compiled circuit
+// Get Compiled Circuit
 async function getCircuit(name: string) {
   await newCompiler();
   const { data: noirSource } = await axios.get('/api/readCircuitFile?filename=' + name);
@@ -52,10 +52,13 @@ function MainComponent(sampleData) {
   const calculateProof = async () => {
     const calc = new Promise(async (resolve, reject) => {
       if (noir && model && selectedDigit) {
+        // Reshape and Rescale Data
         // @ts-ignore
         const input = tf.tensor(sampleData[selectedDigit]).reshape([1, 28, 28]).div(tf.scalar(255.0));
+
         setProvedDigit(+selectedDigit);
 
+        // 
         // @ts-ignore
         const [scaledInput, scaledWeights, scaledBias, output] = forwardPass(model, input);
         
@@ -68,19 +71,19 @@ function MainComponent(sampleData) {
         const outputClass = (await output.array())[0];
         setPrediction(outputClass);
 
-        const flattenedScaledWeights = scaledWeights.flatten();
-        const inputArray = (await scaledInput.array())[0]
-        const result = await noirPedersen!.execute({ inputs: inputArray });
+        const flattenedScaledWeights = scaledWeights.flatten(); // Flatten Matrix
+        const inputArray = (await scaledInput.array())[0] // Get Array & Prediction
+        const hash = await noirPedersen!.execute({ inputs: inputArray }); // Compute Hash of Input
 
-        const abi = {
+        const inputMap = {
             input: inputArray,
             weights: await flattenedScaledWeights.array(),
             biases: await scaledBias.array(),
             class: outputClass,
-            input_hash: result.returnValue,
+            input_hash: hash.returnValue,
         };
 
-        const { proof, publicInputs } = await noir!.generateFinalProof(abi);
+        const { proof, publicInputs } = await noir!.generateFinalProof(inputMap); // Generate Proof
         
         setProof({ proof, publicInputs });
         setOffChainVerification(undefined);
@@ -105,7 +108,7 @@ function MainComponent(sampleData) {
       const verification = await noir!.verifyFinalProof({
         proof: proof.proof,
         publicInputs: proof.publicInputs,
-      });
+      }); // Vefify Current Proof
       console.log('Proof verified off-chain: ', verification);
       setOffChainVerification(verification);
       resolve(verification);
@@ -124,10 +127,11 @@ function MainComponent(sampleData) {
       if (!proof) return reject(new Error('No proof'));
       if (!window.ethereum) return reject(new Error('No ethereum provider'));
       try {
+        
         const ethers = new Ethers();
         await ethers.init();
-        const verification = await ethers.contract.verify(proof.proof, proof.publicInputs);
-        console.log(ethers.signer);
+        const verification = await ethers.contract.verify(proof.proof, proof.publicInputs); // Read-Only, Free Gas
+
         console.log('Proof verified on-chain: ', verification);
         setOnChainVerification(verification);
         resolve(verification);
@@ -148,6 +152,7 @@ function MainComponent(sampleData) {
     });
   }
 
+  // Initialize Noir
   const initNoir = async () => {
     const circuit = await getCircuit('Main/src/main');
     const circuitUtil = await getCircuit('Utils/src/main');
@@ -172,6 +177,7 @@ function MainComponent(sampleData) {
     setNoir(noir);
   };
 
+  // Load MNIST Neural Network
   const loadModel = async () => {
     const model = tf.loadLayersModel("http://localhost:3000/api/readModel/model.json");
 
