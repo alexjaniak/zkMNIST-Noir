@@ -1,6 +1,6 @@
 // Noir v0.3.2
-//use dep::std::hash::pedersen;
-//use dep::std::println;
+use dep::std::println;
+use dep::std::hash::pedersen;
 
 global M = 10; // size of output layer
 global N = 30; // size of last layer 
@@ -52,10 +52,10 @@ fn pred_class(input: [Field; N], weights: [Field; M*N], biases: [Field; M]) -> F
     argmax(out2)
 }
 
-fn main(input: [Field; N], weights: pub [Field; M*N], biases: pub [Field; M], class: pub Field) {
+fn main(input: [Field; N], weights: pub [Field; M*N], biases: pub [Field; M], class: pub Field, input_hash: pub [Field; 2]) {
     let out = pred_class(input, weights, biases);
-
-    //println(out);
+    let computed_hash = pedersen(input);
+    assert(computed_hash == input_hash);
     assert(out == class);
 }  
 
