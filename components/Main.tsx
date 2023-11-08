@@ -179,7 +179,7 @@ function MainComponent(sampleData) {
 
   // Load MNIST Neural Network
   const loadModel = async () => {
-    const model = tf.loadLayersModel("http://localhost:3000/api/readModel/model.json");
+    const model = tf.loadLayersModel(window.location.href + "/api/readModel/model.json");
 
     await toast.promise(model, {
       pending: 'Loading Model...',
