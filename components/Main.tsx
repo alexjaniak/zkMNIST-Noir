@@ -18,6 +18,8 @@ import ProofDisplay from './ProofDisplay';
 //@ts-ignore
 import styles from './Main.module.css';
 
+import Link from 'next/link';
+
 
 // Get Compiled Circuit
 async function getCircuit(name: string) {
@@ -203,17 +205,12 @@ function MainComponent(sampleData) {
   return (
     <div className={styles.container}>
       <h1 style={{textAlign: 'center'}} >ZKMNIST - Noir</h1>
-      <a style={{fontSize: '20px'}} href={'https://github.com/alexjaniak/zkMNIST-Noir'}>@GitHub</a>
+      <div>
+        <a style={{fontSize: '20px'}} href={'https://github.com/alexjaniak/zkMNIST-Noir'}>@GitHub</a>
+        <span style={{marginLeft: '10px', marginRight: '10px'}}>|</span>
+        <Link style={{fontSize: '20px'}} href='/about'>About</Link>
+      </div>
       <hr></hr>
-      <p>
-        Ethereum's smart contracts enable trustless execution in a decentralized environment. Yet, the limitations in computational power and the transparent aspect of blockchain transactions limit the ability to develop applications that require intensive computation or handle private data, like those used in machine learning. Zero-Knowledge (ZK) proofs aim to free these constraints by allowing the validation of transactions or computations without revealing the underlying data, thereby enabling privacy-preserving smart contracts. 
-      </p>
-      <p>
-        These proofs can thus be used to facilitate the on-chain execution of machine learning models in a way that keeps the data used for inference confidential. This web app is an example of such zero-knowledge machine learning with the proving system written using Aztec Network’s ZK domain specific language <a href='https://noir-lang.org/'>Noir</a>. The app uses a neural network trained on the <a href='https://paperswithcode.com/dataset/mnist'>MNIST dataset</a> (A collection of handwritten digits), that classifies the selected digit and then generates proof of the classification while keeping the inputs private. The proof can then be verified on or off-chain. 
-      </p>
-      <p>
-        Inspired by <a href={'https://0xparc.org/blog/zk-mnist'}>0xPARC</a>. Authored by <a href={'https://alexjaniak.com'}>Alexander Janiak</a>.
-      </p>
       <h2>Select Digit</h2>
       <div className={styles.digitGrid}>
         {MNISTLabels.map(label => (

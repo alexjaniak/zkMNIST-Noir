@@ -53,7 +53,7 @@ $$
 $$
 
 > **Note:** The Softmax function preserves order so it does not effect the output of the argmax function.
-> 
+
 ### Preprocessing
 
 At the time of circuit development, Noir libraries like [Signed Int](https://github.com/resurgencelabs/signed_int) and [Fraction](https://github.com/resurgencelabs/fraction) didn't exist. As a result, to circumvent Noir's lack of native signed integers and fraction/floating-points, the input, weights, and biases were scaled and truncated.  
@@ -90,7 +90,7 @@ $$
 $$
 
 ### Commitment
-After a digit is selected, the user generates a public commitment $c_x$ equivalent to the pederson hash of the input $\mathbf{x}$. The circuit then checks the constraint $(\text{hash}{(\mathbf{x})} == c_x)$ which ensures that model's prediction was in fact on the commited input.
+After a digit is selected, the user generates a public commitment $c_x$ equivalent to the pederson hash of the input $\mathbf{x}$. The circuit then checks the constraint $(\text{hash}{(\mathbf{x})} == c_x)$ which ensures that model's prediction used the commited input.
 
 ## Running Locally
 

@@ -15,4 +15,13 @@
     max-width: fit-content;
     margin: 10px auto 10px auto;
 }
+
+.buffer {
+  padding-bottom: 100px;
+}
+
+.imageContainer {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
   
