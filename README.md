@@ -40,7 +40,7 @@ Unlike 0xPARC's CNN approach, the chosen model architecture is a simple dense ne
 The model uses the ReLu activation function between dense layers and a Softmax function after the last layer. The model was trained using Stochastic Gradient Descent and uses Sparse Categorical Cross Entropy for the loss function. After training, the model achieved 97.52% accuracy on the test set. 
 
 ## Approach
-The approach used was similar to 0xPARC's implementation with a few alterations to account for Noir's quirks. Like in 0xPARC's demo, and to simplify the circuit, only the last layer of the model was implemented as a zk-SNARK. Noir's simple Rust-like syntax made writing the circuit easy. 
+The approach used was similar to 0xPARC's implementation with a few alterations to account for changes in the model and Noir's quirks. Like in 0xPARC's demo, and to simplify the circuit, only the last layer of the model was implemented as a zk-SNARK. Noir's simple Rust-like syntax made writing the circuit easy. 
 
 The computation for the neural network's last layer forward pass implemented as a circuit, excluding the Softmax $\sigma$ function, is:
 $$\mathbf{\hat{y}} = \mathbf{L}\mathbf{x} + \mathbf{b}$$
@@ -48,7 +48,7 @@ $$\mathbf{\hat{y}} = \mathbf{L}\mathbf{x} + \mathbf{b}$$
 Where $\mathbf{L}$ corresponds to the weights of the last layer with size $10 \times 30$, $\mathbf{x}$ is the input from the previous layer with size $30 \times 1$, and $\mathbf{b}$ is the layer's biases with size $10 \times 1$. $\mathbf{\hat{y}}$ is the model's prediction where $\sigma(\mathbf{\hat{y}})_i$ can be interpreted as the probability that the $i$th class is the actual class.
 
 The model's class prediction is then computed as:
-$$\hat{p} = \argmax{(\hat{y})}$$
+$$\hat{p} = \text{argmax}{(\mathbf{\hat{y}})}$$
 
 > **Note:** The Softmax function preserves order so it does not effect the output of the argmax function and is not needed in the circuit.
 ### Preprocessing
@@ -57,10 +57,28 @@ At the time of circuit development, Noir libraries like [Signed Int](https://git
 
 To account for negatives, a very big positive integer $c$ is added element-wise to the weights and biases. Due the previous layer's ReLu activation function, $\mathbf{x}$ is guaranteed to be positive. To account for floating points, a positive scaler $a$ scales the weights, biases, and inputs element-wise. Each element is then floored (equivalent to truncation when $\geq0$). $\mathbf{J}$ is a matrix of ones with size $10 \times 30$.
 
-$$\begin{align}\mathbf{z} = \lfloor{a\mathbf{x}}\rfloor \qquad\mathbf{W} = \lfloor{a\mathbf{L}} + cJ\rfloor \qquad\mathbf{v} = \lfloor{a^2\mathbf{b}} + c\vec{1}\rfloor \end{align}$$
+$$\begin{align}\mathbf{z} = \lfloor{a\mathbf{x}}\rfloor \qquad\mathbf{W} = \lfloor{a\mathbf{L}} + c\mathbf{J}\rfloor \qquad\mathbf{v} = \lfloor{a^2\mathbf{b}} + c\vec{1}\rfloor \end{align}$$
 
 Excluding truncation,
-$$\begin{align*}\mathbf{W}\mathbf{z} + \mathbf{v} = (a\mathbf{L}+c\mathbf{J})(a\mathbf{x}) + (a^2\mathbf{b} + c\vec{1}) \\= a^2\mathbf{L}\mathbf{x} + a^2\={b} + ca\mathbf{J_1}\mathbf{x} + c\mathbf{J_2} \\= a^2\mathbf{\hat{y}} + ca\mathbf{J_1}\mathbf{x} + c\vec{1} \\= a^2\mathbf{\hat{y}} + ca\mathbf{J_1}\mathbf{x} + c\vec{1} \\\\= a^2\mathbf{\hat{y}} + c\begin{bmatrix}    a(\mathbf{1} \cdot \mathbf{x})+1 \\    a(\mathbf{1} \cdot \mathbf{x})+1 \\    \vdots \\    a(\mathbf{1} \cdot \mathbf{x})+1 \\    a(\mathbf{1} \cdot \mathbf{x})+1\end{bmatrix} \\\\\equiv a^2\mathbf{\hat{y}} + \mathbf{d},\quad \mathbf{d} \in \mathbb{R}^{10} \\ \therefore \quad \argmax{(a^2\mathbf{\hat{y}} + \mathbf{d})} = \argmax{(\hat{y})} = \hat{p}\end{align*}$$
+
+$$
+\begin{align*}
+  \mathbf{W}\mathbf{z} + \mathbf{v} = (a\mathbf{L}+c\mathbf{J})(a\mathbf{x}) + (a^2\mathbf{b} + c\vec{1}) \\
+  = a^2\mathbf{L}\mathbf{x} + a^2\={b} + ca\mathbf{J}\mathbf{x} + c\mathbf{J_2} \\
+  = a^2\mathbf{\hat{y}} + ca\mathbf{J_1}\mathbf{x} + c\vec{1} \\
+  = a^2\mathbf{\hat{y}} + ca\mathbf{J_1}\mathbf{x} + c\vec{1} \\\\
+  = a^2\mathbf{\hat{y}} + c\begin{bmatrix}    
+    a(\mathbf{1} \cdot \mathbf{x})+1 \\    
+    a(\mathbf{1} \cdot \mathbf{x})+1 \\    
+    \vdots \\    
+    a(\mathbf{1} \cdot \mathbf{x})+1 \\    
+    a(\mathbf{1} \cdot \mathbf{x})+1
+    \end{bmatrix} \\\\
+  \equiv a^2\mathbf{\hat{y}} + \mathbf{d},\quad \mathbf{d} \in \mathbb{R}^{10} \\
+  \therefore \quad \text{argmax}{(a^2\mathbf{\hat{y}} + \mathbf{d})} = \text{argmax}{(\mathbf{\hat{y}})} = \hat{p}
+\end{align*}
+$$
+
 
 ### Commitment
 After a digit is selected, the user generates a public commitment $c_x$ equivalent to the pederson hash of the input $\mathbf{x}$. The circuit then checks the constraint $(\text{hash}{(\mathbf{x})} == c_x)$ which ensures that model's prediction corresponds to that commited input.
@@ -138,4 +156,4 @@ compiling, you may need to uninstall it, instructions
    ```bash
    NETWORK=sepolia yarn build
    ```
-   > **Note:** If using another network, can deploy there by changing the `NETWORK` environment variable corresponding to the network in `hardhat.config.ts`
+   > **Note:** If you want to use another network, you can deploy there by changing the `NETWORK` environment variable corresponding to the network in `hardhat.config.ts`
