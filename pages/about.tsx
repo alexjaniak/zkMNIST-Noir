@@ -95,17 +95,17 @@ export default function Page() {
             </div>
             <p>Unlike 0xPARC's CNN approach, the chosen model architecture is a simple dense network:</p>
             <ModelTable></ModelTable>
-            <p>The model uses the ReLu activation function between dense layers and a Sigmoid function after the last layer. The model was trained using Stochastic Gradient Descent and uses Sparse Categorical Cross Entropy for the loss function. After training, the model achieved 97.52% accuracy on the test set.</p>
+            <p>The model uses the ReLu activation function between dense layers and a Softmax function after the last layer. The model was trained using Stochastic Gradient Descent and uses Sparse Categorical Cross Entropy for the loss function. After training, the model achieved 97.52% accuracy on the test set.</p>
             <hr></hr>
             <h2>Approach</h2>
             <p>The approach used was similar to 0xPARC's implementation with a few alterations to account for Noir's quirks. Like in 0xPARC's demo, and to simplify the circuit, only the last layer of the model was implemented as a zk-SNARK. Noir's simple Rust-like syntax made writing the circuit easy.</p>
-            <p>The computation for the neural network's last layer forward pass implemented as a circuit, excluding the softmax σ function, is:</p>
+            <p>The computation for the neural network's last layer forward pass implemented as a circuit, excluding the softmax <Latex>{'$\\sigma$'}</Latex> function, is:</p>
             <Latex delimiters={[{ left: '$$', right: '$$', display: true }]}>{'$$\\mathbf{\\hat{y}} = \\mathbf{L}\\mathbf{x} + \\mathbf{b}$$'}</Latex>
             <p>Where <Latex>{'\\(\\mathbf{L}\\)'}</Latex> corresponds to the weights of the last layer with size <Latex>{'\\(10 \\times 30\\)'}</Latex>, <Latex>{'\\(\\mathbf{x}\\)'}</Latex> is the input from the previous layer with size <Latex>{'\\(30 \\times 1\\)'}</Latex>, and <Latex>{'\\(\\mathbf{b}\\)'}</Latex> is the layer's biases with size <Latex>{'\\(10 \\times 1\\)'}</Latex>. <Latex>{'\\(\\mathbf{\\hat{y}}\\)'}</Latex> is the model's prediction where <Latex>{'\\(\\sigma(\\mathbf{\\hat{y}})_i\\)'}</Latex> can be interpreted as the probability that the <Latex>{'\\(i\\)'}</Latex>th class is the actual class.</p>
             <p>The model's class prediction is then computed as:</p>
             <Latex delimiters={[{ left: '$$', right: '$$', display: true }]}>{'$$\\hat{p} = \\argmax{(\\mathbf{\\hat{y}})}$$'}</Latex>
             <blockquote>
-                <strong>Note:</strong> The Softmax function preserves order so it does not affect the output of the argmax function.
+                <strong>Note:</strong> The Softmax function preserves order so it does not affect the output of the argmax function and is not needed in the circuit.
             </blockquote>
             <h3>Preprocessing</h3>
             <p>At the time of circuit development, Noir libraries like <a href="https://github.com/resurgencelabs/signed_int">Signed Int</a> and <a href="https://github.com/resurgencelabs/fraction">Fraction</a> didn't exist. As a result, to circumvent Noir's lack of native signed integers and fraction/floating-points, the input, weights, and biases were scaled and truncated.</p>
@@ -138,7 +138,7 @@ export default function Page() {
             $$`}</Latex>
 
             <h3>Commitment</h3>
-            <p className={styles.buffer}>After a digit is selected, the user generates a public commitment <Latex>{'$c_x$'}</Latex> equivalent to the pederson hash of the input <Latex>{'$\\mathbf{x}$'}</Latex>. The circuit then checks the constraint <Latex>{'$(\\text{hash}{(\\mathbf{x})} == c_x)$'}</Latex> which ensures that model's prediction used the committed input.</p>
+            <p className={styles.buffer}>After a digit is selected, the user generates a public commitment <Latex>{'$c_x$'}</Latex> equivalent to the pederson hash of the input <Latex>{'$\\mathbf{x}$'}</Latex>. The circuit then checks the constraint <Latex>{'$(\\text{hash}{(\\mathbf{x})} == c_x)$'}</Latex> which ensures that model's prediction corresponds to that commited input.</p>
         </div>
       );
 }
