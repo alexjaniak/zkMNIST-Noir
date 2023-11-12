@@ -26,7 +26,7 @@ Inspired by [0xPARC's ZK Machine Learning](https://0xparc.org/blog/zk-mnist).
 
 The MNIST dataset is a collection of 70,000 handwritten digits ranging from 0 to 9, commonly used for training and testing in the field of machine learning. It was created by merging samples from a dataset of American Census Bureau employees and high school students to ensure a diverse set of handwriting styles. Each image is grayscale, 28x28 pixels, and labeled with the corresponding digit it represents. MNIST was designed to be a benchmark dataset to evaluate the performance of algorithms in accurately recognizing and classifying handwritten digits. It has become a standard for evaluating machine learning techniques and therefore a perfect dataset to test Noir's capabilities for zero knowledge machine learning.
 
-![Example of MNIST Digits](https://miro.medium.com/v2/resize:fit:850/1*VOP5sC-T2EWm8RmBNGpCUg.png)
+![Example of MNIST Digits](https://upload.wikimedia.org/wikipedia/commons/f/f7/MnistExamplesModified.png)
 
 Unlike 0xPARC's CNN approach, the chosen model architecture is a simple dense network:
 | Layer (type)   | Output Shape | Param #   |
