@@ -35,7 +35,8 @@ Unlike 0xPARC's CNN approach, the chosen model architecture is a simple dense ne
 | dense (Dense)     | (None, 300) | 235,500   |
 | dense_1 (Dense)   | (None, 100) | 30,100    |
 | dense_2 (Dense)   | (None, 30)  | 3,030     |
-| Total params: 268,630 (1.02 MB) | Trainable params: 268,630 (1.02 MB) | Non-trainable params: 0 (0.00 Byte) |
+| dense_3 (Dense)   | (None, 10)  | 310       |
+| Total params: 268,940 (1.03 MB) | Trainable params: 268,940 (1.03 MB) | Non-trainable params: 0 (0.00 Byte) |
 
 The model uses the ReLu activation function between dense layers and a Softmax function after the last layer. The model was trained using Stochastic Gradient Descent and uses Sparse Categorical Cross Entropy for the loss function. After training, the model achieved 97.52% accuracy on the test set. 
 

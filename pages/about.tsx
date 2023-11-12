@@ -58,8 +58,13 @@ const ModelTable = () => {
             <td style={tdStyle}>3,030</td>
           </tr>
           <tr>
-            <td style={tdStyle}>Total params: 268,630 (1.02 MB)</td>
-            <td style={tdStyle}>Trainable params: 268,630 (1.02 MB)</td>
+            <td style={tdStyle}>dense_3 (Dense)</td>
+            <td style={tdStyle}>(None, 10)</td>
+            <td style={tdStyle}>310</td>
+          </tr>
+          <tr>
+            <td style={tdStyle}>Total params: 268,940 (1.03 MB)</td>
+            <td style={tdStyle}>Trainable params: 268,940 (1.03 MB)</td>
             <td style={tdStyle}>Non-trainable params: 0 (0.00 Byte)</td>
           </tr>
         </tbody>
